@@ -1,0 +1,91 @@
+[
+	{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "fileName",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fileSize",
+						"type": "uint256"
+					}
+				],
+				"name": "FileUploaded",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "fileName",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fileSize",
+						"type": "uint256"
+					}
+				],
+				"name": "uploadFile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"deepfake.sol": "MyContract"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"deepfake.sol": {
+			"keccak256": "0x8a8696d7a10ade1ad35d350b1ab04a05588422f8f655f287df45635e867879b6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ce82e579406b86dc0f38ee1eff5b6dc37286c6da42a73ff1aa8c386aa2d9eb1",
+				"dweb:/ipfs/QmeL5M8zEoDijQ5J9BkSEBfGtMx3kMgafmnWSJJJuZm8os"
+			]
+		}
+	},
+	"version": 1
+}
+]

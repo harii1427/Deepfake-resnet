@@ -1,0 +1,9 @@
+tensorflow
+tensorflow-addons[tensorflow]
+facenet_pytorch
+numpy
+opencv-python
+opencv-python-headless
+mtcnn
+moviepy
+librosa

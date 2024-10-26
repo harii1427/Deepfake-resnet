@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap">
+<style>
+  body {
+    background-color: #f7f7f7;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+  }
+
+  h2 {
+    color: #333333;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  .file-upload-wrapper {
+    margin-top: 40px;
+  }
+
+  .file-upload-label {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .file-upload-label:hover {
+    background-color: #45a049;
+  }
+
+  #audioPlayerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  #audioPlayer {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .container {
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .file-upload-label {
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload Your Audio File</h2>
+    <div class="file-upload-wrapper">
+      <label for="audiofile" class="file-upload-label">Choose File</label>
+      <input type="file" id="audiofile" class="file_upload" style="display: none;">
+    </div>
+    <div id="audioPlayerContainer">
+      <audio id="audioPlayer" controls></audio>
+    </div>
+  </div>
+
+  <script>
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    // Prevent default behavior when dragging and dropping files
+    document.body.addEventListener('drop', function(e) {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        audioPlayer.src = e.target.result;
+        audioPlayer.style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    document.body.addEventListener('dragover', function(e) {
+      e.preventDefault();
+    });
+
+    // Handle file input change
+    const fileInput = document.getElementById('audiofile');
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        audioPlayer.src = e.target.result;
+        audioPlayer.style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>

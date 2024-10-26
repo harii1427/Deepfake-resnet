@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .app {
+        max-width: 800px;
+        margin: auto;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        background-color: #fff;
+        padding: 40px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .heading {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .heading h1 {
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .heading p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+
+    .button_section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .button_group input {
+        display: none;
+    }
+
+    .button_group label, .clear_button {
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: block;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 5px;
+        margin: 10px 0px;
+        transition: all 0.3s ease;
+        background-color: #1e88e5;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .clear_button {
+        background-color: #d32f2f;
+        border: 0;
+    }
+
+    .clear_button:hover {
+        background-color: #b71c1c;
+    }
+
+    .button_group label:hover {
+        background-color: #1565c0;
+    }
+
+    /* Add this style for video display */
+    #video {
+        width: 100%;
+        margin-top: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Styles for the dragged video container */
+    #draggedVideoContainer {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(30, 35, 80, 0.9);
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        z-index: 999;
+        cursor: move;
+    }
+
+    #draggedVideo {
+        max-width: 90vw;
+        max-height: 90vh;
+    }
+
+    /* Media queries for responsiveness */
+    @media screen and (max-width: 600px) {
+        .app {
+            padding: 20px;
+        }
+
+        .heading h1 {
+            font-size: 2rem;
+        }
+
+        .heading p {
+            font-size: 1rem;
+        }
+
+        .button_section {
+            flex-direction: column;
+        }
+
+        .button_group label, .clear_button {
+            font-size: 1rem;
+            padding: 10px 20px;
+        }
+    }
+
+  </style>
+  <title>Video Upload Preview</title>
+</head>
+<body>
+  <div class="app">
+    <div class="heading">
+      <h1>Video Upload Preview</h1>
+      <p>Select or drag a video for preview</p>
+    </div>
+
+    <div class="button_section">
+      <div class="button_group">
+        <label for="input1"><i class="fa fa-upload"></i> Upload video</label>
+        <input type="file" accept="video/*" name="" id="input1" />
+      </div>
+
+      <button class="clear_button" onclick="clearVideo()"><i class="fa fa-trash"></i> Clear</button>
+    </div>
+
+    <!-- Add video element for uploaded video preview -->
+    <video id="video" autoplay playsinline></video>
+  </div>
+
+  <div id="draggedVideoContainer" style="display: none;">
+    <video id="draggedVideo" controls autoplay loop></video>
+  </div>
+
+  <script>
+    const input = document.getElementById('input1');
+
+    input.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          // Handle file preview
+          document.querySelector('.heading p').innerText = `Selected video: ${file.name}`;
+          const videoElement = document.getElementById('video');
+          videoElement.src = URL.createObjectURL(file);
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function clearVideo() {
+      // Clear input value and reset heading
+      input.value = '';
+      document.querySelector('.heading p').innerText = 'Select or drag a video for preview';
+      const videoElement = document.getElementById('video');
+      videoElement.src = '';
+    }
+
+    // Event listener for drag and drop
+    window.addEventListener("dragover", function(e) {
+      e.preventDefault();
+    }, false);
+
+    window.addEventListener("drop", function(e) {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith("video/")) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const videoDataUrl = event.target.result;
+            showDraggedVideo(videoDataUrl);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }, false);
+
+    // Function to display dragged video
+    function showDraggedVideo(videoDataUrl) {
+      const videoElement = document.getElementById('video');
+      videoElement.src = videoDataUrl;
+    }
+  </script>
+</body>
+</html>

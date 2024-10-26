@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --blue: #0071FF;
+            --light-blue: #B6DBF6;
+            --dark-blue: #005DD1;
+            --grey: #f2f2f2;
+            --border-color: #0071FF;
+            --capture-btn-color: #FF5722;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--light-blue);
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid var(--border-color); /* Outer border */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+            animation: fadeIn 0.5s ease forwards; /* Fade-in animation */
+        }
+
+        .img-area {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            background: var(--grey);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            border: 2px solid transparent; /* Initially transparent border */
+            transition: border-color 0.3s ease; /* Smooth border color transition */
+        }
+
+        .img-area:hover {
+            border-color: var(--border-color); /* Change border color on hover */
+        }
+
+        .img-area .icon {
+            font-size: 100px;
+            color: var(--blue); /* Icon color */
+        }
+
+        .img-area h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--dark-blue); /* Heading color */
+        }
+
+        .img-area p {
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .img-area p span {
+            font-weight: 600;
+            color: var(--blue); /* Span color */
+        }
+
+        .img-area img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 100;
+        }
+
+        .img-area::before {
+            content: attr(data-img);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            color: #fff;
+            font-weight: 500;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: all .3s ease;
+            z-index: 200;
+        }
+
+        .img-area.active:hover::before {
+            opacity: 1;
+        }
+
+        .select-image {
+            display: block;
+            width: 100%;
+            padding: 16px 0;
+            border-radius: 15px;
+            background: var(--blue);
+            color: #fff;
+            font-weight: 500;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+        .select-image:hover {
+            background: var(--dark-blue);
+        }
+
+        /* Added styles for the webcam access button */
+        .webcam-access {
+            font-size: 24px;
+            color: var(--dark-blue);
+            cursor: pointer;
+            margin: auto; /* Center horizontally */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            animation: fadeIn 0.5s ease forwards; /* Fade-in animation */
+        }
+
+        .webcam-access i {
+            font-size: 36px; /* Increase icon size */
+            background-color: var(--blue); /* Background color */
+            color: #fff; /* Icon color */
+            border-radius: 50%; /* Make the icon circular */
+            padding: 15px; /* Adjust padding */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        .webcam-access i:hover {
+            background-color: var(--dark-blue); /* Darker background color on hover */
+        }
+
+
+        .webcam-access span {
+            margin-left: 5px;
+        }
+        
+        /* Styles for the webcam modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto; /* Center the modal horizontally */
+            margin-top: 10%; /* Adjust the top margin for vertical centering */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px; /* Limit the maximum width */
+            border-radius: 10px;
+            position: relative;
+            text-align: center; /* Center align content */
+        }
+
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+
+        /* Capture button styles */
+        #captureBtn {
+            display: block;
+            width: 60px; /* Adjust width according to icon size */
+            height: 60px; /* Adjust height according to icon size */
+            margin: 0 auto; /* Center the button horizontally */
+            margin-top: 20px; /* Add some top margin for spacing */
+            padding: 12px;
+            border-radius: 50%; /* Make the button circular */
+            background: var(--capture-btn-color);
+            color: #fff;
+            font-size: 24px; /* Adjust font size of icon */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #captureBtn:hover {
+            background: #ff7043; /* Darker shade on hover */
+        }
+
+
+        /* Responsive styles */
+        @media(max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <title>Input Image With Preview Image</title>
+</head>
+<body>
+
+<div class="container">
+    <div id="dragDropArea" class="drag-drop-area">
+        <span class="drag-drop-text">Drag & Drop or Click Here to Upload Image</span>
+        <input type="file" id="file" accept="image/*" style="display: none;">
+        <label for="file" class="img-area" data-img="">
+            <i class='bx bxs-cloud-upload icon'></i>
+            <h3>Upload Image</h3>
+            <p>Image size must be less than <span>2MB</span></p>
+        </label>
+    </div>       
+    
+    <!-- Remaining elements -->
+    <div class="webcam-access" id="webcam-access">
+        <i class='bx bxs-camera'></i>
+    </div>
+</div>
+    
+
+
+
+<!-- Webcam Modal -->
+<div id="webcamModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <video id="video" autoplay></video>
+        <button id="captureBtn"><i class="bx bx-camera"></i></button> <!-- Using an icon instead of text -->
+    </div>
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

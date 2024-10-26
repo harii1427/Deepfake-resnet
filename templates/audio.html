@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Audio Inference</h2>
+
+<div id="drop-area" class="drop-area">
+    <form id="file-upload-form" class="my-form" action="{{ url_for('audio') }}" method="post" enctype="multipart/form-data">
+        <div class="box">
+            <p>Drag and drop an audio file here or click to select a file</p>
+            <input type="file" name="file" id="fileElem" accept="audio/*" required onchange="handleFiles(this.files)">
+            <button type="button" id="predictButton" class="button">Predict</button>
+        </div>
+        <input type="submit" value="Upload Audio" style="display:none;" id="uploadButton">
+    </form>
+    <div id="gallery"></div>
+</div>
+
+{% if result %}
+    <h3>Result: {{ result }}</h3>
+    <audio controls style="max-width: 100%; height: auto;">
+        <source src="{{ url_for('uploaded_file', filename=file_url) }}" type="audio/flac">
+        Your browser does not support the audio element.
+    </audio>
+{% elif error %}
+    <h3 style="color: red;">{{ error }}</h3>
+{% endif %}
+
+<script>
+    let dropArea = document.getElementById('drop-area')
+    let predictButton = document.getElementById('predictButton')
+
+    // Prevent default drag behaviors
+    ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false)
+    })
+
+    function preventDefaults (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    // Highlight drop area when item is dragged over it
+    ;['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.classList.add('highlight')
+    })
+
+    ;['dragleave', 'drop'].forEach(eventName => {
+      dropArea.classList.remove('highlight')
+    })
+
+    dropArea.addEventListener('drop', handleDrop, false)
+
+    function handleDrop(e) {
+      let dt = e.dataTransfer
+      let files = dt.files
+
+      handleFiles(files)
+    }
+
+    function handleFiles(files) {
+      document.getElementById('fileElem').files = files; // Link file input to dropped files
+      // Do not auto-submit here
+    }
+
+    predictButton.addEventListener('click', function() {
+      let fileInput = document.getElementById('fileElem');
+      if (fileInput.files.length === 0) {
+        alert('Please select a file or drop an audio file into the area.');
+        return;
+      }
+      document.getElementById('uploadButton').click();  // Trigger form submission
+    })
+</script>
+
+{% endblock %}

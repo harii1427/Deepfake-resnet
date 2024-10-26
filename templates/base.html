@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"> <!-- Include your logo here -->
+        <h2>Deepfake Detection</h2>
+        <a href="{{ url_for('image') }}">Image Inference</a>
+        <a href="{{ url_for('video') }}">Video Inference</a>
+        <a href="{{ url_for('audio') }}">Audio Inference</a>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
